@@ -1,9 +1,10 @@
-*/__pycache__
-__pycache__
+*/__pycache__/
+__pycache__/
 
-work_dir/pt_*
-work_dir/pretrain/*.pth
+work_dir
+*/.ipynb_checkpoints/
+.ipynb_checkpoints/
 
-conf
+conf/
 
 .DS_Store
