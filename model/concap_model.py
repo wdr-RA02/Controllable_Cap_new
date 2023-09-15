@@ -30,7 +30,7 @@ class ConCapModel(BlipPreTrainedModel):
         # VisAbstractor
         self.vis_abstr_config=BlipVisionConfig(
             hidden_size=self.config.vision_config.hidden_size,
-            num_hidden_layers=3,
+            num_hidden_layers=6,
             image_size=self.config.vision_config.image_size,
             layer_norm_eps=self.config.vision_config.layer_norm_eps
         )
