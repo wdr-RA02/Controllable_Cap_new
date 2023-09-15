@@ -1,0 +1,27 @@
+{
+    // "model_name":"Salesforce/blip-image-captioning-base",
+    "text_model":{
+        // will copy one to dataset.pfx_len, dataset.n_cls
+        "prefix_len": 16,
+        "n_cls": 215,
+        // no use currently
+        "image_size": 384,
+        "prefix_hidden_size": 1024,
+        "prefix_projection": false
+    },
+    "train":{
+        "batch_size_per_gpu": 8,
+        "lr": 1e-5,
+    },
+    "dataset":{
+        "img_path":"/148Dataset/data-gao.zhenpeng/PCap/yfcc_images/",
+        "dataset_path":"/148Dataset/data-gao.zhenpeng/PCap/personality_captions/",
+        "img_attr":".jpg",
+        "train_json":"train.json",
+        "test_json":"test.json",
+        "val_json":"val.json",
+        "style_dict": "./conf/style_dict.json"
+    },
+    "work_dir":"./work_dir/base_pt_baseline/"
+    
+}

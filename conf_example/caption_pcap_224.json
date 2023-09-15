@@ -1,0 +1,42 @@
+{
+    "text_model":{
+        "prefix_len": 16,
+        "n_cls": 216,
+        "prefix_hidden_size": 3072,
+        "prefix_projection": false,
+        "max_len": 30,
+        "num_beams":3,
+        "repetition_penalty": 1.2,
+        "prefix_vit": true,
+        "prefix_decoder": true,
+        "shrink_sv": true
+    },
+    "vision_model":{
+        "image_size": 224
+    },
+    "train":{
+        "batch_size_per_gpu": 8,
+        "num_workers": 4,
+        "scheduler":{
+            "lr": 1e-5,
+            "lr_end": 1e-7,
+            "warmup_ratio": 0.01
+        },
+        "weight_decay": 0.05,
+        "max_epoch": 2,
+        "logging":{
+            "log_tensorboard": true,
+            "log_step": 50
+        }
+    },
+    "dataset":{
+        "img_path":"PCAP_PATH/yfcc_images/",
+        "dataset_path":"PCAP_PATH/personality_captions/",
+        "img_attr":".jpg",
+        "train_json":"train.json",
+        "test_json":"test.json",
+        "val_json":"val.json",
+        "style_dict": "./conf/style_dict.json"
+    },
+    "work_dir":"./work_dir/test4_224/"
+}

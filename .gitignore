@@ -1,0 +1,9 @@
+*/__pycache__
+__pycache__
+
+work_dir/pt_*
+work_dir/pretrain/*.pth
+
+conf
+
+.DS_Store
