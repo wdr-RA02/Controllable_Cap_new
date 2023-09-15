@@ -34,7 +34,7 @@ def step_decay_epoch(optim,
                warmup_steps: int=0,
                last_epoch: int=-1,
                **kwargs):
-    assert 0<alpha<1.0, \
+    assert 0<alpha<=1.0, \
             "Argument alpha must be in (0,1), got {}".format(alpha)
     assert warmup_steps>=0, "Warm-up steps must be geq 0, got {}".format(warmup_steps)
     
