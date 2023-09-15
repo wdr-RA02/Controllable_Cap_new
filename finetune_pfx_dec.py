@@ -391,6 +391,7 @@ def load_model(config, pretrain_path:str, device):
     # interpolate in case 
     model=process_vit_pos_emb(pretrain_path, model)
     # freeze vit, train dec only
+    model.text_decoder.requires_grad_(False)
     model.vision_model.requires_grad_(False)
     model.vision_prefix.requires_grad_(False)
     # model.vis_abstr.requires_grad_(False)
