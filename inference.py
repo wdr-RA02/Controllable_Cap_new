@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     # load ckpt
     model, processor, load_info=load_model(config, pt_path, device)
-    print(model.get_pfx_status())
+    # print(model.get_pfx_status())
 
     load_ckpt=args.load_ckpt
     if load_ckpt is not None:

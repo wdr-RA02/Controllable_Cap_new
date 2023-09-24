@@ -277,11 +277,11 @@ class ConCapTrainer(object):
         self.preprocessor.save_pretrained(tgt_dir)
 
         state_dict=self.model.state_dict()
-        if not self.model.prefix_vit_():
-            state_dict={k:v for k,v in state_dict.items() if not k.startswith("vision_prefix.")}
+        # if not self.model.prefix_vit_():
+        #     state_dict={k:v for k,v in state_dict.items() if not k.startswith("vision_prefix.")}
         
-        if not self.model.prefix_decoder_():
-            state_dict={k:v for k,v in state_dict.items() if not k.startswith("decoder_prefix.")}
+        # if not self.model.prefix_decoder_():
+        #     state_dict={k:v for k,v in state_dict.items() if not k.startswith("decoder_prefix.")}
 
         self.model.save_pretrained(tgt_dir, state_dict=state_dict)
 
@@ -391,8 +391,8 @@ def load_model(config, pretrain_path:str, device):
     # interpolate in case 
     model=process_vit_pos_emb(pretrain_path, model)
     # freeze vit, train dec only
-    model.vision_model.requires_grad_(False)
-    model.vision_prefix.requires_grad_(False)
+    # model.vision_model.requires_grad_(False)
+    # model.vision_prefix.requires_grad_(False)
     # model.vis_abstr.requires_grad_(False)
 
     model.to(device)
@@ -443,7 +443,7 @@ if __name__ == "__main__":
     trainer=ConCapTrainer(model, device, processor, config, 
                           train_config, dist_config)
     
-    print(model.get_pfx_status())
+    # print(model.get_pfx_status())
     for name, param in model.named_parameters():
         if param.requires_grad:
             print(name)
