@@ -377,7 +377,7 @@ class ConCapModel(BlipPreTrainedModel):
                              encoder_attn_mask=image_attention_mask,
                              top_k=self.config.text_config.top_k,
                              top_p=self.config.text_config.top_p,
-                             temp=0.95)
+                             temp=0.75)
         
         return seq
 
