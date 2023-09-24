@@ -4,8 +4,9 @@ from .pfx_encoder import PrefixEncoder
 from transformers.models.blip.modeling_blip import BlipPreTrainedModel, BlipConfig, \
                                                    BlipVisionModel, BlipEncoder, BlipVisionConfig
 from transformers.models.blip.modeling_blip_text import BlipTextLMHeadModel
+from .utils.generation import generate_nucleus
 
-class ConCapModel(BlipPreTrainedModel):
+class ConCapModelOld(BlipPreTrainedModel):
     config_class=BlipConfig
 
     def __init__(self, 
@@ -224,8 +225,7 @@ class ConCapModel(BlipPreTrainedModel):
 
         return outputs
     
-
-class ConCapModelNew(BlipPreTrainedModel):
+class ConCapModel(BlipPreTrainedModel):
     config_class=BlipConfig
 
     def __init__(self, 
@@ -272,7 +272,7 @@ class ConCapModelNew(BlipPreTrainedModel):
         # input_ids -> input_embeds, shape=[b, seq_len, hidden]
         input_embs=self.text_decoder.get_input_embeddings()(input_ids)
         # concat
-        input_embs=torch.concat([prefix_embs, input_embs], dim=1).to(input_embs.device)
+        input_embs=torch.cat([prefix_embs, input_embs], dim=1).to(input_embs.device)
 
         return input_embs
     
@@ -363,11 +363,22 @@ class ConCapModelNew(BlipPreTrainedModel):
         attention_mask = attention_mask[:, :-1] if attention_mask is not None else None
 
         # get embs
-        input_embs=self.embed_from_ids(input_ids=input_ids, prefix_ids=prefix_ids)
-        batch, pfx_len=prefix_ids.shape
-        # TODO: concat attn mask with prefix all_one
-        pfx_attn_mask=torch.ones((batch, pfx_len)).to(input_embs.device)
-        attn_mask=torch.cat([pfx_attn_mask, attention_mask], dim=1).to(attention_mask.device)
+        prefix_embs=self.decoder_prefix(prefix_ids)
+        # batch, pfx_len=prefix_ids.shape
+        # pfx_attn_mask=torch.ones((batch, pfx_len)).to(prefix_embs.device)
+        # if attention_mask is None:
+        #     attention_mask=torch.ones((batch,1)).to(prefix_embs.device)
 
-        # TODO: impl the rest of generate() with beam gen
+        # attn_mask=torch.cat([pfx_attn_mask, attention_mask], dim=1).to(attention_mask.device)
 
+        seq=generate_nucleus(self.text_decoder, 
+                             prefix_embeds=prefix_embs,
+                             encoder_hidden_states=image_embeds,
+                             encoder_attn_mask=image_attention_mask,
+                             top_k=self.config.text_config.top_k,
+                             top_p=self.config.text_config.top_p,
+                             temp=0.95)
+        
+        return seq
+
+        
