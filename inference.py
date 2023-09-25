@@ -47,8 +47,9 @@ if __name__ == "__main__":
     
         print("Missing keys: {}".format(missing_keys))
         print("Unexpected keys: {}".format(unexp_keys))
-    
-    inf_r=inference(model, config, processor, device, inference_list)
+
+    n_beam=config["text_model"].get("num_beams", 3)
+    inf_r=inference(model, config, processor, device, inference_list, beam_size=n_beam)
     print("\n--------Inference results------------")
     for item in inf_r:
         neat_print_dict(item)
