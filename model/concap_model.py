@@ -264,14 +264,15 @@ class ConCapTextModel(BlipTextLMHeadModel):
             # concat prefix to the head of input_(whatever)
             if input_ids is not None and inputs_embeds is not None:
                 raise ValueError("Both input_ids and inputs_embeds exist, it's not allowed")
-            elif input_ids is not None:
+            elif input_ids is not None and past_key_values is None:
                 inputid_embeds=self.get_input_embeddings()(input_ids)
                 inputs_embeds=torch.cat([prefix_embeds, inputid_embeds], dim=1)
-            elif inputs_embeds is not None:
+            elif inputs_embeds is not None and past_key_values is None:
                 inputs_embeds=torch.cat([prefix_embeds, inputs_embeds], dim=1)
         
         # use inputs_embeds only
         # calculate loss outside, due to the intro of prefix_embeds
+
         outputs=self.bert(
             input_ids=None,
             attention_mask=attention_mask,
@@ -329,8 +330,7 @@ class ConCapTextModel(BlipTextLMHeadModel):
         input_ids=old_stuff.pop("input_ids")
         inputs_emb=self.get_input_embeddings()(input_ids)
 
-        if prefix_embs is not None:
-            batch, pfx_len=prefix_embs.shape[:-1]
+        if prefix_embs is not None and past_key_values is None:
             inputs_emb=torch.cat([prefix_embs, inputs_emb], dim=1)
             
             # attn_mask=old_stuff.pop("attention_mask")
