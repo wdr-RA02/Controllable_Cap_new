@@ -8,3 +8,4 @@ work_dir
 conf/
 
 .DS_Store
+.vscode
