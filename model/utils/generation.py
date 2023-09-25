@@ -68,7 +68,6 @@ def generate_nucleus(model,
     done=torch.tensor([False for _ in range(batch)], device=device)
     cur_cap=torch.zeros(batch, 1, device=device, dtype=torch.long).fill_(bos)
     cur_attn_mask=torch.ones(batch, pfx_len, dtype=torch.long).to(device)
-    cur_attn_mask.masked_fill_(cur_attn_mask==pad, 0)
     
     cur_len=0
     while cur_len<=max_len:
