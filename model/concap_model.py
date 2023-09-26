@@ -35,7 +35,7 @@ class ConCapTextModel(BlipTextLMHeadModel):
         '''
         Take care of attention_mask outside of this function! 
         '''
-        prefix_len=0
+        prefix_len = 0
         if prefix_embeds is not None:
             assert prefix_embeds.dim()==3, \
                 "prefix_embeds expected to be of shape [b, p, h], got {}" \
@@ -69,12 +69,12 @@ class ConCapTextModel(BlipTextLMHeadModel):
             return_dict=return_dict,
             is_decoder=is_decoder,
         )
-
-        if return_logits:
-            return prediction_scores[:, :-1, :].contiguous()
-        
         sequence_output = outputs[0]
         prediction_scores = self.cls(sequence_output)
+
+        if return_logits:
+            return prediction_scores[:, prefix_len:-1, :].contiguous()
+
         lm_loss = None
         if labels is not None:
             # we are doing next-token prediction; shift prediction scores and input ids by one
@@ -113,12 +113,6 @@ class ConCapTextModel(BlipTextLMHeadModel):
 
         if prefix_embs is not None and past_key_values is None:
             inputs_emb=torch.cat([prefix_embs, inputs_emb], dim=1)
-            
-            # attn_mask=old_stuff.pop("attention_mask")
-            # attn_mask=torch.cat([torch.ones(batch, pfx_len, dtype=torch.long),\
-            #                      attn_mask], dim=1).to(self.device)
-            
-            # old_stuff["attention_mask"]=attn_mask
         
         old_stuff["inputs_embeds"]=inputs_emb
 
