@@ -77,6 +77,7 @@ class ConCapTextModel(BlipTextLMHeadModel):
 
         lm_loss = None
         if labels is not None:
+            labels.masked_fill_(labels==self.config.pad_token_id, -100)
             # we are doing next-token prediction; shift prediction scores and input ids by one
             shifted_prediction_scores = prediction_scores[:, prefix_len:-1, :].contiguous()
             labels = labels[:, 1:].contiguous().to(shifted_prediction_scores.device)
@@ -91,7 +92,7 @@ class ConCapTextModel(BlipTextLMHeadModel):
 
         return CausalLMOutputWithCrossAttentions(
             loss=lm_loss,
-            logits=prediction_scores,
+            logits=prediction_scores[:, prefix_len:, :],
             past_key_values=outputs.past_key_values,
             hidden_states=outputs.hidden_states,
             attentions=outputs.attentions,
